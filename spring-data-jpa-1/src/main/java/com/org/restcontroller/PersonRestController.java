@@ -79,6 +79,10 @@ public class PersonRestController {
 	public List<Perosn> fetchByAge2025(@PathVariable int age1,@PathVariable int age2){
 		return dao.fetchByAge2025(age1,age2);
 	}
+	@GetMapping("/ne/{age}")
+	public ResponseEntity<List<Object>> fetchNameEmailByAge(@PathVariable int age){
+		return new ResponseEntity<List<Object>>(dao.fetchNameEmailByAge(age),HttpStatus.OK);
+	}
 	
 	
 

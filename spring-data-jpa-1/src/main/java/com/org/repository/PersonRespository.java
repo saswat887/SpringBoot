@@ -15,6 +15,8 @@ public interface PersonRespository extends JpaRepository<Perosn, Integer>{
 	List<Perosn> fetchByAge(int age);
 	@Query("select p.name from Perosn p where p.age>=?1")
 	List<String> fetchNameByAge(int age);
+	@Query("select p.name,p.email from Perosn p where p.age>=?1")
+	List<Object> fetchNameEmailByAge(int age);
 	@Query("select p from Perosn p where p.age>=?1 and p.age<=?2")
 	List<Perosn> fetchByAge2025(int age1,int age2);
 	

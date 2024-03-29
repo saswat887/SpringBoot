@@ -68,6 +68,8 @@ public class PersonDao {
 	public List<Perosn> fetchByAge2025(int age1,int age2){
 		return repo.fetchByAge2025(age1,age2);
 	}
-	
+	public List<Object> fetchNameEmailByAge(int age){
+		return repo.fetchNameEmailByAge(age);
+	}
 
 }
