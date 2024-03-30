@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,14 +17,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.org.Exception.HandlerException;
+import com.org.Exception.PersonNotFoundException;
 import com.org.dao.PersonDao;
 import com.org.dto.Perosn;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/person")
+@Tag(name="Person CRUD",description="Person REST API")
 public class PersonRestController {
 	@Autowired
 	PersonDao dao;
+	
+	@ExceptionHandler
+	public ResponseEntity<HandlerException> handlingexception(PersonNotFoundException person){
+		HandlerException obj=new HandlerException();
+		obj.setStatus(HttpStatus.NOT_FOUND.value());
+		obj.setMessage(person.getMessage());
+		obj.setTimeStamp(System.currentTimeMillis());
+		return new ResponseEntity<HandlerException>(obj,HttpStatus.NOT_FOUND);
+	}
+	
 	
 	@PostMapping //postmapping for saving
 	public ResponseEntity<Perosn> savePerson(@RequestBody Perosn person)
@@ -49,7 +65,8 @@ public class PersonRestController {
 		Perosn person= dao.fetchById(id);
 		if(person!=null)
 			return new ResponseEntity<Perosn>(person,HttpStatus.OK);
-		return new ResponseEntity<Perosn>(HttpStatus.NOT_FOUND);
+	//	return new ResponseEntity<Perosn>(HttpStatus.NOT_FOUND);
+		throw new PersonNotFoundException("Person not found for ID:-"+id);
 	}
 	@DeleteMapping("/{id}") //deletemapping for deleting data
 	public String deleteById(@PathVariable int id){
